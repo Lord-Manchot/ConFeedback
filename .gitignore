@@ -1,0 +1,17 @@
+# Node modules
+node_modules/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+
+# Système
+.DS_Store
+
+# Fichiers de configuration
+firebase-config.js
+
+# Fichiers de build
+dist/
+build/

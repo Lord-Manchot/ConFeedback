@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solution de Feedback</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="feedback-container">
+        <h1>Donnez votre Feedback !</h1>
+        
+        <!-- Système d'Étoiles -->
+        <div class="star-rating">
+            <span class="star" data-value="1">&#9733;</span>
+            <span class="star" data-value="2">&#9733;</span>
+            <span class="star" data-value="3">&#9733;</span>
+            <span class="star" data-value="4">&#9733;</span>
+            <span class="star" data-value="5">&#9733;</span>
+        </div>
+        
+        <!-- Bouton de Soumission -->
+        <button id="submit-feedback-btn">Soumettre le Feedback</button>
+        
+        <!-- Message de Confirmation -->
+        <div id="feedback-message"></div>
+    </div>
+
+    <!-- Inclure Firebase via CDN (compat versions) -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+
+    <!-- Initialiser Firebase -->
+    <script>
+        // Remplace les valeurs ci-dessous par celles de ton projet Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyBACDSdCgEozm2oGtg86I3XdipfOf31SV4",
+            authDomain: "confeedback-9c989.firebaseapp.com",
+            projectId: "confeedback-9c989",
+            storageBucket: "confeedback-9c989.appspot.com",
+            messagingSenderId: "532157861887",
+            appId: "1:532157861887:web:336fab0e99cf720d61e1ca"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+
+    <!-- Inclure ton fichier main.js -->
+    <script src="js/main.js"></script>
+</body>
+</html>
