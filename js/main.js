@@ -4,7 +4,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const stars = document.querySelectorAll('.star');
     const submitBtn = document.getElementById('submit-feedback-btn');
     const feedbackMessage = document.getElementById('feedback-message');
+    const sessionTitle = document.getElementById('session-title');
     let selectedRating = 0;
+    let sessionId = '';
+
+    // Fonction pour obtenir les paramètres de l'URL
+    function getURLParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+    }
+
+    // Fonction pour charger les détails de la session
+    async function loadSessionDetails(sessionId) {
+        try {
+            const sessionDoc = await db.collection('sessions').doc(sessionId).get();
+            if (sessionDoc.exists) {
+                const session = sessionDoc.data();
+                sessionTitle.textContent = `Feedback pour : ${session.title}`;
+            } else {
+                sessionTitle.textContent = "Session non trouvée.";
+                submitBtn.disabled = true;
+                feedbackMessage.textContent = "La session spécifiée n'existe pas.";
+                feedbackMessage.style.color = "red";
+            }
+        } catch (e) {
+            console.error("Erreur lors du chargement de la session : ", e);
+            sessionTitle.textContent = "Erreur de chargement de la session.";
+            submitBtn.disabled = true;
+            feedbackMessage.textContent = "Erreur lors du chargement de la session. Veuillez réessayer plus tard.";
+            feedbackMessage.style.color = "red";
+        }
+    }
+
+    // Obtenir le sessionId depuis l'URL
+    sessionId = getURLParameter('sessionId');
+    if (sessionId) {
+        loadSessionDetails(sessionId);
+    } else {
+        sessionTitle.textContent = "Aucune session spécifiée.";
+        submitBtn.disabled = true;
+        feedbackMessage.textContent = "Aucune session spécifiée pour soumettre un feedback.";
+        feedbackMessage.style.color = "red";
+    }
 
     // Fonction pour mettre à jour l'affichage des étoiles
     function updateStars(rating) {
@@ -36,6 +77,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Gérer la soumission du feedback
     submitBtn.addEventListener('click', async () => {
+        if (!sessionId) {
+            feedbackMessage.textContent = "Aucune session spécifiée.";
+            feedbackMessage.style.color = "red";
+            return;
+        }
+
         if (selectedRating === 0) {
             feedbackMessage.textContent = "Veuillez sélectionner une note avant de soumettre.";
             feedbackMessage.style.color = "red";
@@ -44,6 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         try {
             await db.collection("feedbacks").add({
+                sessionId: sessionId,
                 rating: selectedRating,
                 timestamp: firebase.firestore.FieldValue.serverTimestamp()
             });
